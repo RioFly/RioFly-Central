@@ -778,7 +778,8 @@
 
       // Saldo acumulado (exemplo: soma dos custos dos voos)
       const diariosSnap = await db.ref("diarios").once("value");
-      let saldo = 0;
+      let saldo = 5000000; // Fundo inicial de R$ 5 milhões
+
       financeiroHistoricoDiv.innerHTML = "";
       manutencoesHistoricoDiv.innerHTML = "";
 
