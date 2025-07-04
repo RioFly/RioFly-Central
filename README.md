@@ -566,6 +566,52 @@
       mensagemSucesso.innerText = "";
     }
 
+    async function carregarHistorico() {
+    const aeronave = aeronaveSelect.value;
+      historicoDiv.innerHTML = "";
+    if (!aeronave) return;
+    const snapshot = await db.ref("diarios/" + aeronave).orderByChild("dataHoraEnvio").once("value");
+    if (!snapshot.exists()) {
+    historicoDiv.innerHTML = "<p>Nenhum diário enviado ainda para esta aeronave.</p>";
+    return;
+  }
+  const entries = [];
+  snapshot.forEach(child => {
+    entries.push({ id: child.key, ...child.val() });
+  });
+  entries.sort((a,b) => new Date(b.dataHoraEnvio) - new Date(a.dataHoraEnvio));
+  historicoDiv.innerHTML = `<h3>Histórico Resumido - ${aeronave}</h3>`;
+  entries.forEach(e => {
+    historicoDiv.innerHTML += `
+      <div class="entrada" id="entry-${e.id}">
+        <strong>Data do Envio:</strong> ${new Date(e.dataHoraEnvio).toLocaleString()}<br>
+        <strong>Comandante:</strong> ${e.comandante}<br>
+        <strong>Data do Voo:</strong> ${e.dataVoo}<br>
+        <strong>Trajeto:</strong> ${e.trajeto}<br>
+        <strong>Tempo de Voo:</strong> ${e.tempoVoo}<br>
+        <strong>Combustível:</strong> ${e.tipoCombustivel} (${e.litrosCombustivel} L) - R$ ${e.custoCombustivel}<br>
+        <strong>Custos:</strong> ${e.custos}<br>
+        <strong>Observações:</strong> ${e.observacoes}<br>
+        <button class="btnDelete" onclick="apagarEntrada('${aeronave}', '${e.id}')">Apagar</button>
+      </div>
+         `;
+       });
+      }
+  
+      async function apagarEntrada(aeronave, entradaId) {
+  const confirmacao = confirm("Tem certeza que deseja apagar este registro?");
+  if (!confirmacao) return;
+
+  try {
+    await db.ref(`diarios/${aeronave}/${entradaId}`).remove();
+    alert("Registro apagado com sucesso.");
+    carregarHistorico();
+    carregarFinanceiro();
+  } catch (error) {
+    alert("Erro ao apagar registro: " + error.message);
+        }
+      }
+
     // Carregar horas totais da aeronave selecionada
     async function carregarHorasTotaisAer() {
       const aeronave = aeronaveSelect.value;
