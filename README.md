@@ -313,7 +313,7 @@
         <div id="mensagemSucesso"></div>
         <form id="diarioForm">
           <label for="comandante">Comandante:</label>
-          <input type="text" id="comandante" readonly aria-readonly="true" />
+          <input type="text" id="comandante" />
           
           <label for="dataVoo">Data do Voo:</label>
           <input type="date" id="dataVoo" required />
