@@ -567,20 +567,25 @@
     }
 
     async function carregarHistorico() {
-    const aeronave = aeronaveSelect.value;
-      historicoDiv.innerHTML = "";
-    if (!aeronave) return;
-    const snapshot = await db.ref("diarios/" + aeronave).orderByChild("dataHoraEnvio").once("value");
-    if (!snapshot.exists()) {
+  const aeronave = aeronaveSelect.value;
+  historicoDiv.innerHTML = "";
+  if (!aeronave) return;
+
+  const snapshot = await db.ref("diarios/" + aeronave).orderByChild("dataHoraEnvio").once("value");
+  if (!snapshot.exists()) {
     historicoDiv.innerHTML = "<p>Nenhum diário enviado ainda para esta aeronave.</p>";
     return;
   }
+
   const entries = [];
   snapshot.forEach(child => {
     entries.push({ id: child.key, ...child.val() });
   });
+
   entries.sort((a,b) => new Date(b.dataHoraEnvio) - new Date(a.dataHoraEnvio));
+
   historicoDiv.innerHTML = `<h3>Histórico Resumido - ${aeronave}</h3>`;
+
   entries.forEach(e => {
     historicoDiv.innerHTML += `
       <div class="entrada" id="entry-${e.id}">
@@ -594,10 +599,10 @@
         <strong>Observações:</strong> ${e.observacoes}<br>
         <button class="btnDelete" onclick="apagarEntrada('${aeronave}', '${e.id}')">Apagar</button>
       </div>
-         `;
-       });
-      }
-  
+     `;
+    });
+   }
+
       async function apagarEntrada(aeronave, entradaId) {
   const confirmacao = confirm("Tem certeza que deseja apagar este registro?");
   if (!confirmacao) return;
@@ -609,8 +614,8 @@
     carregarFinanceiro();
   } catch (error) {
     alert("Erro ao apagar registro: " + error.message);
-        }
-      }
+  }
+}
 
     // Carregar horas totais da aeronave selecionada
     async function carregarHorasTotaisAer() {
