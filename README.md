@@ -582,7 +582,7 @@
     entries.push({ id: child.key, ...child.val() });
   });
 
-  entries.sort((a,b) => new Date(b.dataHoraEnvio) - new Date(a.dataHoraEnvio));
+  entries.sort((a, b) => new Date(b.dataHoraEnvio) - new Date(a.dataHoraEnvio));
 
   historicoDiv.innerHTML = `<h3>Histórico Resumido - ${aeronave}</h3>`;
 
@@ -599,11 +599,12 @@
         <strong>Observações:</strong> ${e.observacoes}<br>
         <button class="btnDelete" onclick="apagarEntrada('${aeronave}', '${e.id}')">Apagar</button>
       </div>
-     `;
+       `;
     });
-   }
+  }
 
-      async function apagarEntrada(aeronave, entradaId) {
+
+async function apagarEntrada(aeronave, entradaId) {
   const confirmacao = confirm("Tem certeza que deseja apagar este registro?");
   if (!confirmacao) return;
 
